@@ -1,24 +1,33 @@
-import { Component } from '@angular/core';
-import { Line } from 'src/app/models/line.entity';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { nearer } from 'q';
+import { Subscription } from 'rxjs';
+import { Line } from './models/line.entity';
+import { ProduitService } from '../services/produit.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   //styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  line = new Line();
-  lines: Line[] = [];
+export class AppComponent implements OnInit, OnDestroy {
 
-  constructor() {
-    let line = new Line();
-    line.name = 'Telescope';
-    line.id = 1;
-    line.price = 25000;
-    line.quantity = 5;
-    this.lines.push(line);
-  }
+  lines: Line[] = [];
+  line = new Line();
+  productSubscription: Subscription;
+
+
+  constructor(private productService: ProduitService) {}
+
+  ngOnDestroy(): void {
+    this.productSubscription.unsubscribe();
+   }
+   
+   ngOnInit(): void {
+     this.productSubscription = this.productService.productsSubject.subscribe(lines => {
+       this.lines = lines;
+     });
+     this.productService.emitSubject();
+   }
 
   public orderPrice(): number {
     let price = 0;
@@ -27,11 +36,10 @@ export class AppComponent {
   }
 
   public addLine(line: Line) {
-    line.id = this.lines.length + 1;
-    this.lines.push(line);
+    this.productService.addLine(line);
   }
 
   public removeLine(id: number) {
-    this.lines = this.lines.filter(line => line.id !== id);
+    this.productService.removeLine(id);
   }
 }

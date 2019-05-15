@@ -1,11 +1,14 @@
 export class Line {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
+
+    constructor(
+        public id?: number, 
+        public name?: string, 
+        public price?: number, 
+        public quantity?: number
+        ) {}
 
     public totalPrice(): number {
         return this.price * this.quantity;
     }
-
+    
 }
