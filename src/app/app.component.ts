@@ -7,7 +7,6 @@ import { ProduitService } from '../services/produit.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  //styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
 
@@ -16,18 +15,18 @@ export class AppComponent implements OnInit, OnDestroy {
   productSubscription: Subscription;
 
 
-  constructor(private productService: ProduitService) {}
+  constructor(private productService: ProduitService) { }
 
   ngOnDestroy(): void {
     this.productSubscription.unsubscribe();
-   }
-   
-   ngOnInit(): void {
-     this.productSubscription = this.productService.productsSubject.subscribe(lines => {
-       this.lines = lines;
-     });
-     this.productService.emitSubject();
-   }
+  }
+
+  ngOnInit(): void {
+    this.productSubscription = this.productService.productsSubject.subscribe(lines => {
+      this.lines = lines;
+    });
+    this.productService.emitSubject();
+  }
 
   public orderPrice(): number {
     let price = 0;
